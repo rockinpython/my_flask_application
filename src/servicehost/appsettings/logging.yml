@@ -1,0 +1,42 @@
+logging:
+    version: 1
+
+    formatters:
+      brief:
+        format: '%(message)s'
+      default:
+        format: '%(asctime)s %(levelname)-8s %(name)-15s %(message)s'
+        datefmt: '%Y-%m-%d %H:%M:%S'
+      fluent:
+        '()': fluent.handler.FluentRecordFormatter
+        format:
+          host: '%(hostname)s'
+          level: '%(levelname)s'
+          where: '%(module)s.%(funcName)s'
+          message: '%(message)s'
+          stack_trace: '%(exc_text)s'
+      aws:
+        format: "[%(asctime)s] %(levelname)-8s - %(message)s\n\n(%(module)s:%(funcName)s:%(lineno)s)"
+
+
+    handlers:
+        console:
+            class: logging.StreamHandler
+            level: DEBUG
+            formatter: default
+            stream: ext://sys.stdout
+        fluent:
+            class: fluent.handler.FluentHandler
+            tag: poc
+            formatter: fluent
+            level: DEBUG
+        watchtower:
+            formatter: aws
+            '()': watchtower.CloudWatchLogHandler
+            log_group: '{env_name}/poc'
+
+    loggers:
+        '': # root logger
+            handlers: [console, fluent, watchtower]
+            level: DEBUG
+            propagate: False

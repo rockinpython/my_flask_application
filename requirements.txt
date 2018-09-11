@@ -1,0 +1,6 @@
+flask==0.10.1
+jsonpickle
+fluent-logger~=0.5.0
+watchtower~=0.5.3
+python-dotenv
+PyYAML==3.12

@@ -1,0 +1,10 @@
+app:
+  image: python:3.6
+  container_name: poc
+  env_file:
+#    - deployment/defaults.env
+    - deployment/dev.env
+  net: "local-dev"
+  volumes:
+    - .:/app
+  command: bash cmd.sh
